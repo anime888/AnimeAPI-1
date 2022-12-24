@@ -22,10 +22,19 @@ router.get('/episodes/:id', async (req, res) => {
 });
 
 router.get('/watch/:episodeId', async (req, res) => {
-    const episodeId = req.params.episodeId;
+	const episodeId = req.params.episodeId;
 
-    const data = await fetchCrunchyrollSources({ episodeId });
-    res.json(data).status(200)
+	const data = await fetchCrunchyrollSources({ episodeId });
+	if (data.sources) {
+		res.redirect(
+			307,
+			'https://plyr.link/p/player.html#' + btoa(data.sources[1].url)
+		);
+	} else {
+		res.render('watch', {
+			...data,
+		});
+	}
 });
 
 export default router;
