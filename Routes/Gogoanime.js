@@ -38,7 +38,7 @@ router.get('/watch/:episodeId', async (req, res) => {
 	if (
 		(data.sources && data.sources.length) ||
 		(data.sources_bk && data.sources_bk.length)
-	) if(!result) return res.status(400).json({message:"Not found en-Us"}) {
+	)  {
 		res.redirect(
 			307,
 			'https://plyr.link/p/player.html#' +
