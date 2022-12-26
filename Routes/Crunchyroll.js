@@ -26,9 +26,11 @@ router.get('/watch/:episodeId', async (req, res) => {
 
 	const data = await fetchCrunchyrollSources({ episodeId });
 	if (data.sources) {
+		const result = data.sources.find(source => source.hardsub_locale === 'en-US')
+		if(!result) return res.status(400).json({message:"Not found en-Us"})
 		res.redirect(
 			307,
-			'https://plyr.link/p/player.html#' + btoa(data.sources[1].url)
+			'https://plyr.link/p/player.html#' + btoa(result.url)
 		);
 	} else {
 		res.render('watch', {
