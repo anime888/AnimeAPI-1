@@ -45,9 +45,7 @@ router.get('/watch/:episodeId', async (req, res) => {
 				btoa(data.sources[0].file || data.sources_bk[0].file)
 		);
 	} else {
-		res.render('watch', {
-			...data,
-		});
+		res.status(404).json({message:"Not found episode"})
 	}
 });
 
