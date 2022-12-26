@@ -32,10 +32,23 @@ router.get('/info/:animeId', async (req, res) => {
 });
 
 router.get('/watch/:episodeId', async (req, res) => {
-    const episodeId = req.params.episodeId;
+	const episodeId = req.params.episodeId;
 
-    const data = await fetchGogoanimeEpisodeSource({ episodeId });
-    res.json(data).status(200)
+	const data = await fetchGogoanimeEpisodeSource({ episodeId });
+	if (
+		(data.sources && data.sources.length) ||
+		(data.sources_bk && data.sources_bk.length)
+	) {
+		res.redirect(
+			307,
+			'https://plyr.link/p/player.html#' +
+				btoa(data.sources[0].file || data.sources_bk[0].file)
+		);
+	} else {
+		res.render('watch', {
+			...data,
+		});
+	}
 });
 
 export default router;
