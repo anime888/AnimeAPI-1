@@ -55,6 +55,13 @@ export {
     fetch9animeEpisodeSources
 } from './9anime/9anime.js';
 
+export {
+    fetchAllanimeRecentEpisodes,
+    fetchSearchAllanime,
+    fetchAllanimeInfo,
+    fetchAllanimeEpisodeSource
+} from './allanime/allanime.js';
+
 // GLOBAL ROUTES
 
 export const fetchPopular = async ({ list = [], type = 1 }) => {

@@ -17,13 +17,14 @@ import animixRoutes from './Routes/Animixplay.js';
 import zoroRoutes from './Routes/Zoro.js';
 import crunchyrollRoutes from './Routes/Crunchyroll.js';
 import nineanimeRoutes from './Routes/NineAnime.js';
+import allanimeRoutes from './Routes/Allanime.js';
 
 app.use('/gogoanime', gogoRoutes);
 app.use('/animix', animixRoutes);
 app.use('/zoro', zoroRoutes);
 app.use('/crunchyroll', crunchyrollRoutes);
 app.use(['/9anime', '/nineanime'], nineanimeRoutes);
-
+app.use('/allanime', allanimeRoutes);
 
 // Routes
 app.get('/', (req, res) => {
