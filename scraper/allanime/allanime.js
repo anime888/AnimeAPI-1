@@ -22,7 +22,7 @@ export const fetchAllanimeRecentEpisodes = async () => {
     try {
         let list = [];
         const { data: { data: { shows: { edges } } } } = await axios.get(
-            `${allanimeApi}?variables=${recentEpisodesVariable}&extensions=${recentEpisodesExtension}`,
+            decodeURIComponent(`${allanimeApi}?variables=${recentEpisodesVariable}&extensions=${recentEpisodesExtension}`),
             headerAllanime
         );
 
