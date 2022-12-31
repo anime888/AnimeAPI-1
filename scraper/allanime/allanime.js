@@ -5,26 +5,21 @@ const allanimeApi = allanimeBase + 'allanimeapi';
 const allanimeSourceUrl = 'https://blog.allanimenews.com';
 
 import {
-    recentEpisodesVariable,
-    searchVariable,
-    animeInfoVariable,
-    episodeListVariable,
-    sourceVariable,
-    recentEpisodesExtension,
-    searchExtension,
-    animeInfoExtension,
-    episodeListExtension,
-    sourceExtension,
+    recentEpisodeParams,
+    searchParams,
+    animeInfoParams,
+    episodeListParams,
+    sourceParams,
     headerAllanime,
 } from './allanimeConstants.js';
 
 export const fetchAllanimeRecentEpisodes = async () => {
     try {
         let list = [];
-        const { data: { data: { shows: { edges } } } } = await axios.get(
-            decodeURIComponent(`${allanimeApi}?variables=${recentEpisodesVariable}&extensions=${recentEpisodesExtension}`),
-            headerAllanime
-        );
+        const { data: { data: { shows: { edges } } } } = await axios.get(allanimeApi, {
+            params: recentEpisodeParams,
+            headers: headerAllanime
+        });
 
         edges.map((ep) => {
             list.push({
@@ -52,10 +47,10 @@ export const fetchSearchAllanime = async ({ keyw, list = [] }) => {
             error_message: "No keyword provided"
         };
 
-        const { data } = await axios.get(
-            `${allanimeApi}?variables=${searchVariable(keyw)}&extensions=${searchExtension}`,
-            headerAllanime
-        );
+        const { data } = await axios.get(allanimeApi, {
+            params: searchParams(keyw),
+            headers: headerAllanime
+        });
 
         data.data.shows.edges.map((anime) => {
             list.push({
@@ -85,16 +80,16 @@ export const fetchAllanimeInfo = async ({ animeId, list = {} }) => {
             error_message: "No keyword provided"
         };
 
-        const { data: { data: { show } } } = await axios.get(
-            `${allanimeApi}?variables=${animeInfoVariable(animeId)}&extensions=${animeInfoExtension}`,
-            headerAllanime
-        );
+        const { data: { data: { show } } } = await axios.get(allanimeApi, {
+            params: animeInfoParams(animeId),
+            headers: headerAllanime
+        });
 
         let episodes = [];
-        const epList = await axios.get(
-            `${allanimeApi}?variables=${episodeListVariable(animeId, 0, show.episodeCount)}&extensions=${episodeListExtension}`,
-            headerAllanime
-        );
+        const epList = await axios.get(allanimeApi, {
+            params: episodeListParams(animeId, 0, show.availableEpisodesDetail.sub.length),
+            headers: headerAllanime
+        });
 
         epList.data.data.episodeInfos.map((ep) => {
             episodes.push({
@@ -143,10 +138,10 @@ export const fetchAllanimeEpisodeSource = async ({ episodeId, episode = {} }) =>
         let animeId = episodeId.split("$")[0];
         let episodeNum = episodeId.split("$")[1];
 
-        const { data } = await axios.get(
-            `${allanimeApi}?variables=${sourceVariable(animeId, episodeNum)}&extensions=${sourceExtension}`,
-            headerAllanime
-        );
+        const { data } = await axios.get(allanimeApi, {
+            params: sourceParams(animeId, episodeNum),
+            headers: headerAllanime
+        });
 
         const sourceApiLink = data.data.episode.sourceUrls.sort((a, b) => b.priority - a.priority)[0].sourceUrl;
 
