@@ -22,7 +22,7 @@
 - [Navigation](#navigation)
 - [Installation](#installation)
 - [Available Routes](#available-routes)
-  - [AnimeAPI docs available at this link](#animeapi-docs-available-at-this-link)
+  - [AnimeAPI docs will be available soon](#animeapi-docs-will-be-available-soon)
 - [Contributing](#contributing)
 
 ## Installation
@@ -41,12 +41,14 @@ npm start
 Animixplay has shut down, forever. The routes for animixplay will not be removed, however they do not work anymore.
 
 
-You may test out these routes by going to [AnimeAPI demo](https://animeapi-demo.herokuapp.com/), but do note that this might be very slow and it is recommended to self host to get the fastest response time possible.
+You may test out these routes by going to [AnimeAPI demo](https://animeapi-57t9.onrender.com/), but do note that this might be very slow and it is recommended to self host to get the fastest response time possible.
 
-**NOTE**: Allanime routes *DO NOT* work on the above demo link. However it works just fine when hosted locally. A silly mistake, ill fix this soon, but it is highly recommended to self-host and run this project rather than using the demo link.
+### AnimeAPI docs will be available soon
+Until then, the base structure for routes are:
 
-### AnimeAPI docs available at [this link](https://igrohan.gitbook.io/animeapi/)
-All routes and also installation instructions available here!
+**Search**: `/{provider}/search?keyw={query}` <br>
+**Info**: `/{provider}/info/{animdId}` <br>
+**Episode Source**: `/{provider}/watch/{episodeId}`
 
 ## Contributing
 
