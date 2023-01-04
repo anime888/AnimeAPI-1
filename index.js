@@ -5,8 +5,7 @@ import cors from 'cors';
 
 //Importing Global functions & utils
 import {
-    fetchPopular,
-    fetchAnimeByGenre
+    fetchSchedule
 } from './scraper/scrape.js';
 
 app.use(cors({ origin: "*", credentials: true }));
@@ -18,6 +17,7 @@ import zoroRoutes from './Routes/Zoro.js';
 import crunchyrollRoutes from './Routes/Crunchyroll.js';
 import nineanimeRoutes from './Routes/NineAnime.js';
 import allanimeRoutes from './Routes/Allanime.js';
+import animepaheRoutes from './Routes/Animepahe.js';
 
 app.use('/gogoanime', gogoRoutes);
 app.use('/animix', animixRoutes);
@@ -25,25 +25,17 @@ app.use('/zoro', zoroRoutes);
 app.use('/crunchyroll', crunchyrollRoutes);
 app.use(['/9anime', '/nineanime'], nineanimeRoutes);
 app.use('/allanime', allanimeRoutes);
+app.use('/animepahe', animepaheRoutes)
 
 // Routes
 app.get('/', (req, res) => {
     res.send('Welcome to AnimeAPI!')
 });
 
-app.get('/popular', async (req, res) => {
-    const type = req.query.type;
-
-    const data = await fetchPopular({ type });
+app.get('/schedule', async (req, res) => {
+    const data = await fetchSchedule();
     res.json(data).status(200);
-});
-
-app.get('/genre/:genre', async (req, res) => {
-    const genre = req.params.genre;
-
-    const data = await fetchAnimeByGenre({ genre });
-    res.json(data).status(200)
-});
+})
 
 //Start the web-server
 const PORT = process.env.PORT || 3000;

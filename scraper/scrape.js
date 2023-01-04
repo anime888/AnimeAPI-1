@@ -1,23 +1,7 @@
 import axios from 'axios';
 import { load } from 'cheerio';
 
-const animixBase = "https://animixplay.to/"
-
-const USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36";
-const headerOption = { headers: { "User-Agent": USER_AGENT } };
-
-const GENRES = [
-    'Action', 'Adventure', 'Anti-Hero', 'CGDCT', 'College', 'Comedy', 'Drama', 'Ecchi', 'Fantasy', 'Gag Humor',
-    'Game', 'Harem', 'Historical', 'Horror', 'Idol', 'Isekai', 'Iyashikei', 'Josei', 'Kids', 'Magical Girl',
-    'Martial Arts', 'Mecha', 'Military', 'Movie', 'Music', 'Mythology', 'Mystery', 'Otaku', 'Parody', 'Police',
-    'Psychological', 'Racing', 'Revenge', 'Romance', 'Rural', 'Samurai', 'School', 'Sci-Fi', 'Seinen', 'Shoujo',
-    'Shoujo Ai', 'Shounen', 'Shounen Ai', 'Slice of Life', 'Space', 'Sports', 'Super Power', 'Supernatural',
-    'Survival', 'Suspense', 'Time Travel', 'Vampire', 'Work'
-]
-
-import {
-    firstLetterToUpperCase
-} from '../helper/utils.js';
+const livechartBase = `https://www.livechart.me/`;
 
 // Animix
 export {
@@ -62,104 +46,34 @@ export {
     fetchAllanimeEpisodeSource
 } from './allanime/allanime.js';
 
+export {
+    fetchSearchAnimepahe,
+    fetchAnimepaheEpisodeSource,
+    fetchAnimepaheInfo
+} from './animepahe/animepahe.js';
+
 // GLOBAL ROUTES
-
-export const fetchPopular = async ({ list = [], type = 1 }) => {
+export const fetchSchedule = async () => {
     try {
-        if (type == 1) {
-            const res = await axios.get(animixBase + 'assets/s/popular.json', headerOption);
+        const res = await axios.get(`${livechartBase}schedule/tv?sortby=countdown`);
+        const $ = load(res.data);
 
-            res.data.result.map((anime) => {
-                list.push({
-                    animeTitle: anime.title,
-                    mal_id: anime.url.split("/").reverse()[0],
-                    animeImg: anime.picture,
-                    views: anime.infotext.split(" ")[3],
-                    score: anime.score / 100
-                })
-            })
-        } else if (type == 2) {
-            const res = await axios(animixBase + 'api/search', {
-                method: "POST",
-                headers: {
-                    "User-Agent": USER_AGENT,
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                data: new URLSearchParams({ genre: "any", minstr: 99999999, orderby: "popular" })
-            })
+        let schedule = [];
 
-            res.data.result.map((anime) => {
-                list.push({
-                    animeTitle: anime.title,
-                    animeId: anime.url.split("/").reverse()[0],
-                    animeImg: anime.picture,
-                    format: anime.infotext,
-                    score: anime.score / 100
-                })
+        $('div.schedule-card').each((i, el) => {
+            schedule.push({
+                animeTitle: $(el).attr('data-title'),
+                episode: $(el).find('.episode-countdown').attr('data-label'),
+                unixTimestamp: $(el).find('.episode-countdown').attr('data-timestamp')
             })
-        }
+        })
 
-        return list;
-    } catch (err) {
-        console.log(err)
+        return schedule;
+    } catch (error) {
+        console.log(error)
         return {
             error: true,
-            error_message: err
+            error_message: error
         }
     }
-};
-
-export const fetchAnimeByGenre = async ({ list = [], genre }) => {
-    try {
-        if (!genre) {
-            return {
-                error: true,
-                error_message: "No genre provided"
-            }
-        };
-
-        if (genre.toLowerCase() === "anti-hero") {
-            genre = "Anti-Hero"
-        } else if (genre.toLowerCase() === "cgdct") {
-            genre = "CGDCT"
-        } else {
-            genre = firstLetterToUpperCase(genre);
-        };
-
-        if (!GENRES.includes(genre)) {
-            return {
-                error: true,
-                error_message: "This genre does not exist."
-            }
-        };
-
-        const res = await axios.request({
-            url: animixBase + "api/search",
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "User-Agent": USER_AGENT
-            },
-            data: new URLSearchParams({ genre, minstr: 99999999, orderby: "popular" })
-        });
-
-        res.data.result.map((anime) => {
-            list.push({
-                animeTitle: anime.title,
-                animeId: anime.url.split("/v1/")[1],
-                animeImg: anime.picture,
-                animeSeason: anime.infotext,
-                score: anime.score / 100
-            })
-        });
-
-        return list;
-
-    } catch (err) {
-        console.log(err)
-        return {
-            error: true,
-            error_message: err
-        }
-    }
-};
+}
