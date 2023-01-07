@@ -38,11 +38,10 @@ router.get('/watch/:episodeId', async (req, res) => {
 			'https://plyr.link/p/player.html#' + btoa(data.sources[0].link)
 		);
 	} else {
-		res.status(404).json({message:"Not found episode"})
-	}
+		res.render('watch', {
+			...data,
 		});
 	}
-})
-
+});
 
 export default router;
