@@ -32,7 +32,16 @@ router.get('/watch/:episodeId', async (req, res) => {
     const episodeId = req.params.episodeId;
 
     const data = await fetchAllanimeEpisodeSource({ episodeId });
-    res.json(data).status(200);
+   	if (data.sources) {
+		res.redirect(
+			307,
+			'https://plyr.link/p/player.html#' + btoa(data.sources[0].link)
+		);
+	} else {
+		res.status(404).json({message:"Not found episode"})
+	}
+		});
+	}
 })
 
 
