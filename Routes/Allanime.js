@@ -35,7 +35,7 @@ router.get('/watch/:episodeId', async (req, res) => {
    	if (data.sources) {
 		res.redirect(
 			307,
-			'https://plyr.link/p/player.html#' + btoa(data.sources[0].link)
+			'https://live.vidstreamjp.cloud/player.html#' + btoa(data.sources[0].link)
 		);
 	} else {
 res.status(404).json({message:"Not found episode"})
